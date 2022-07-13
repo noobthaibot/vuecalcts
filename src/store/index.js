@@ -9,7 +9,7 @@ export default new Vuex.Store({
     cart: [],
   },
   mutations: {
-    setCart: (state, item: Array<Array>) => {
+    setCart: (state, item) => {
       if (item.name && item.price && item.quantity) {
         state.cart.push(item)
       } else {
