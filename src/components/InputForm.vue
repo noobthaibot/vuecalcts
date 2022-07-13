@@ -28,13 +28,38 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import { mapGetters, mapActions } from "vuex";
+type Form = {
+  name: string;
+  price: number;
+  quantity: number;
+  checked: boolean;
+};
+
+declare module "vue/types/vue" {
+  interface Vue {
+    form: {
+      name: string;
+      price: number;
+      quantity: number;
+      checked: boolean;
+    };
+    initForm: {
+      name: string;
+      price: number;
+      quantity: number;
+      checked: boolean;
+    };
+    getStorage: () => void;
+    setStorage: () => void;
+  }
+}
 
 export default {
   initForm: {
     name: "",
-    price: "",
+    price: Number,
     quantity: 1,
     checked: false,
   },
@@ -50,7 +75,7 @@ export default {
   },
   watch: {
     form: {
-      handler() {
+      handler: function (): void {
         this.updateStorage();
       },
       deep: true,
@@ -65,14 +90,14 @@ export default {
   },
   methods: {
     ...mapActions(["addItemToCart", "checkItems"]),
-    submitItem(form) {
+    submitItem(form: Form) {
       this.form = { ...this.$options.initForm };
       return this.addItemToCart(form);
     },
     getStorage() {
       return JSON.parse(localStorage.getItem("myform"));
     },
-    setStorage(val) {
+    setStorage(val: Record<string, unknown>) {
       localStorage.setItem("myform", JSON.stringify(val));
     },
     updateStorage() {
@@ -82,7 +107,7 @@ export default {
       storedForm = JSON.parse(JSON.stringify(this.form));
       this.setStorage(storedForm);
     },
-    toggle() { 
+    toggle() {
       return this.checkItems();
     },
   },

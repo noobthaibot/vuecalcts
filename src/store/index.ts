@@ -1,6 +1,12 @@
 import Vue from "vue";
 import Vuex from "vuex";
 import createPersistedState from "vuex-persistedstate";
+type Cart = {
+  name: string;
+  price: number;
+  quantity: number;
+  checked: boolean;
+};
 
 Vue.use(Vuex);
 
@@ -9,14 +15,14 @@ export default new Vuex.Store({
     cart: [],
   },
   mutations: {
-    setCart: (state, item: Array<Array>) => {
+    setCart: (state: any, item: Cart) => {
       if (item.name && item.price && item.quantity) {
-        state.cart.push(item)
+        return state.cart.push(item);
       } else {
-        alert('please enter valid values')
+        alert("please enter valid values");
       }
     },
-    deleteItem: (state) => {
+    deleteItem: (state: any) => {
       for (let i = 0; i < state.cart.length; i++) {
         if (state.cart[i].checked === true) {
           state.cart.splice(i, 1);
@@ -24,28 +30,22 @@ export default new Vuex.Store({
       }
     },
     setCheckboxes: (state) => {
-      state.cart.map(el => {
-        el.checked = true
-      })
-    }
+      state.cart.map((el: Cart) => {
+        el.checked = true;
+      });
+    },
   },
   plugins: [createPersistedState()],
   actions: {
-    addItemToCart({
-      commit
-    }, item) {
+    addItemToCart({ commit }, item: Cart) {
       commit("setCart", item);
     },
-    deleteItemFromCart({
-      commit
-    }, item) {
-      commit('deleteItem', item)
+    deleteItemFromCart({ commit }, item) {
+      commit("deleteItem", item);
     },
-    checkItems({
-      commit
-    }, item) {
-      commit('setCheckboxes', item)
-    }
+    checkItems({ commit }, item) {
+      commit("setCheckboxes", item);
+    },
   },
   modules: {},
   getters: {

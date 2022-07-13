@@ -19,12 +19,16 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import TableRow from "./TableRow.vue";
 import { mapGetters, mapActions } from "vuex";
-
+declare module "vue/types/vue" {
+  interface Vue {
+    deleteItemFromCart: () => void;
+  }
+}
 export default {
-  created() {
+  created(): void {
     console.log(this.cart);
   },
   components: {
@@ -32,20 +36,16 @@ export default {
   },
   computed: {
     ...mapGetters(["cart"]),
-    sumValues() {
+    sumValues(): number {
       return this.cart.reduce(
-        (Sum, product) => product.price * product.quantity + Sum,
+        (Sum: number, product: []) => product.price * product.quantity + Sum,
         0
       );
     },
   },
   name: "v-table",
   props: {
-    item_data: {
-      default: () => {
-        return [];
-      },
-    },
+    item_data: {},
   },
   methods: {
     ...mapActions(["deleteItemFromCart"]),
