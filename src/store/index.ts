@@ -7,6 +7,20 @@ type Cart = {
   quantity: number;
   checked: boolean;
 };
+export interface Data {
+  cart: {
+    name: string;
+    price: number;
+    quantity: number;
+    checked: boolean;
+  }[];
+}
+export interface Element {
+  name: string;
+  price: number;
+  quantity: number;
+  checked: boolean;
+}
 
 Vue.use(Vuex);
 
@@ -15,22 +29,21 @@ export default new Vuex.Store({
     cart: [],
   },
   mutations: {
-    setCart: (state: any, item: Cart) => {
+    setCart: (state: Data, item: Cart) => {
       if (item.name && item.price && item.quantity) {
         return state.cart.push(item);
       } else {
         alert("please enter valid values");
       }
     },
-    deleteItem: (state: any) => {
-      for (let i = 0; i < state.cart.length; i++) {
-        if (state.cart[i].checked === true) {
-          state.cart.splice(i, 1);
-        }
-      }
+    deleteItem: (state: Data) => {
+      state.cart = state.cart
+        .filter((el: Element) => {
+          return !el.checked;
+        })
     },
     setCheckboxes: (state) => {
-      state.cart.map((el: Cart) => {
+      state.cart.map((el: Element) => {
         el.checked = true;
       });
     },

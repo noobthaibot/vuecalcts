@@ -30,12 +30,16 @@
 
 <script lang="ts">
 import { mapGetters, mapActions } from "vuex";
+import Vue from "vue";
 type Form = {
   name: string;
   price: number;
   quantity: number;
   checked: boolean;
 };
+declare interface Data {
+  form: Form;
+}
 
 declare module "vue/types/vue" {
   interface Vue {
@@ -56,7 +60,7 @@ declare module "vue/types/vue" {
   }
 }
 
-export default {
+export default Vue.extend<Data>({
   initForm: {
     name: "",
     price: Number,
@@ -92,6 +96,7 @@ export default {
     ...mapActions(["addItemToCart", "checkItems"]),
     submitItem(form: Form) {
       this.form = { ...this.$options.initForm };
+      this.form.checked = false;
       return this.addItemToCart(form);
     },
     getStorage() {
@@ -108,8 +113,9 @@ export default {
       this.setStorage(storedForm);
     },
     toggle() {
+      this.form.checked = false;
       return this.checkItems();
     },
   },
-};
+});
 </script>
